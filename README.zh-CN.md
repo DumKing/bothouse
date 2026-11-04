@@ -8,6 +8,11 @@
 
 # bothouse
 
+> 本 fork 提供 macOS 15 Intel 构建：安装 Go 1.25+、pnpm、Python 3 和 Apple Command Line Tools 后，
+> 在仓库根目录运行 `bash .github/release-check/build-macos-intel.sh /绝对路径/输出目录`。
+> 构建会显式指定最低 macOS 15.0，生成完整向导、内嵌 hub、Intel DMG 与 SHA256SUMS。
+> 安装包使用本地临时签名与 `dev-` 版本，不冒用上游发布身份；打包前检查程序实际最低系统版本与安装说明一致。
+
 [English](README.md) ｜ **中文**
 
 [![Release](https://img.shields.io/github/v/release/zuiho-kai/bothouse?style=flat-square&color=e8833a&label=release)](https://github.com/zuiho-kai/bothouse/releases)

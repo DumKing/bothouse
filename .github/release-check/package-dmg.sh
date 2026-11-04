@@ -1,11 +1,20 @@
 #!/bin/bash
-# Usage: package-dmg.sh UNIVERSAL_BINARY OUTPUT TAG (run on macOS).
+# Usage: package-dmg.sh BINARY OUTPUT TAG [universal|x86_64] [MIN_OS] (run on macOS).
 set -euo pipefail
 binary=$1
 output=$2
 tag=$3
-lipo "$binary" -verify_arch arm64
-lipo "$binary" -verify_arch x86_64
+architecture=${4:-universal}
+minimum=${5:-12.0}
+case "$architecture" in
+  universal) architectures="arm64 x86_64" ;;
+  x86_64) architectures=x86_64 ;;
+  *) echo "Unsupported package architecture: $architecture" >&2; exit 1 ;;
+esac
+for arch in $architectures; do
+  lipo "$binary" -verify_arch "$arch"
+  python3 "$(dirname "$0")/verify-macos-minimum.py" "$binary" "$arch" "$minimum"
+done
 stage=$(mktemp -d)
 app="$stage/Bothouse.app"
 mkdir -p "$app/Contents/MacOS"
@@ -25,7 +34,7 @@ cat > "$app/Contents/Info.plist" <<PLIST
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleShortVersionString</key><string>${tag#v}</string>
 <key>CFBundleVersion</key><string>${tag#v}</string>
-<key>LSMinimumSystemVersion</key><string>12.0</string>
+<key>LSMinimumSystemVersion</key><string>${minimum}</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>
 </dict></plist>

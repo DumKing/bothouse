@@ -57,6 +57,20 @@ curl -fsSL https://raw.githubusercontent.com/zuiho-kai/bothouse/main/install.sh 
 
 The Windows command, package downloads, the background service and the DSH channel are in [Getting started](docs/GETTING_STARTED.md).
 
+### Intel Mac on macOS 15 (this fork)
+
+For a local Intel build, run `bash .github/release-check/build-macos-intel.sh /absolute/output/directory`
+with Go 1.25 or newer, pnpm, Python 3 and Apple's Command Line Tools installed.
+The script explicitly targets macOS 15.0, builds the web wizard and embedded hub,
+and produces `bothouse-macos15-intel.dmg` plus `SHA256SUMS`. It uses an ad-hoc
+signature and a `dev-` version; it does not claim the upstream release identity.
+The package check rejects a Mach-O minimum OS newer than the version advertised
+in `Info.plist` (the original v0.1.48 Intel binary required 27.0 despite advertising 12.0).
+Use a macOS 15-capable SDK and compiler. If the active Command Line Tools are
+older but Xcode is installed, prefix the command with
+`DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` to select Xcode for
+this build without changing the system-wide developer tools selection.
+
 <a id="features"></a>
 
 <picture>
