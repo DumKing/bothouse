@@ -39,6 +39,13 @@ cat > "$app/Contents/Info.plist" <<PLIST
 <key>NSHighResolutionCapable</key><true/>
 </dict></plist>
 PLIST
+# The custom Intel app is signed as a complete bundle after its plist and icon
+# exist. A standalone executable signature alone has no bundle resource seal.
+# Universal upstream releases retain their separate release-signing identity.
+if [ "$architecture" = x86_64 ]; then
+  codesign --force --sign - --identifier ai.bothouse.desktop "$app"
+  codesign --verify --deep --strict "$app"
+fi
 ln -s /Applications "$stage/Applications"
 # hdiutil's own size estimate for -srcfolder came out too small once the DSH
 # plugin was embedded in the binary (release run 39881299879 failed with
